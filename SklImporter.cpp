@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "SklImporter.h"
 
-void SklImporter::readFile(const wchar_t* path)
+void SklImporter::readFile(const std::string& path)
 {
 	ifstream inFile(path, ios::in | ios::binary);
 	if (!inFile.is_open())

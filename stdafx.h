@@ -9,14 +9,13 @@
 #define VC_EXTRALEAN            // Exclude rarely-used stuff from Windows headers
 #endif
 
-#include "targetver.h"
-
 #define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS      // some CString constructors will be explicit
 #define _AFX_NO_MFC_CONTROLS_IN_DIALOGS         // remove support for MFC controls in dialogs
 
 // turns off MFC's hiding of some common and often safely ignored warning messages
 #define _AFX_ALL_WARNINGS
 
+#if 0
 #include <afxwin.h>         // MFC core and standard components
 #include <afxext.h>         // MFC extensions
 
@@ -47,6 +46,7 @@
 #pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #endif
 #endif
+#endif
 
 using namespace std;
 #include <fstream>
@@ -69,8 +69,9 @@ using namespace std;
 using namespace IMATH_INTERNAL_NAMESPACE;
 
 #include "lol2daeError.h"
-#include "CustomEdit.h"
+// #include "CustomEdit.h"
 #include "SknVertex.h"
 #include "SklBone.h"
-#include "FileLocation.h"
+// #include "FileLocation.h"
 #include "AnmBone.h"
+

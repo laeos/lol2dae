@@ -1,10 +1,13 @@
+
+#include <algorithm>
+
 #include "stdafx.h"
 #include "resource.h"
 #include "AnmImporter.h"
 #include "ColladaWriter.h"
 #include "EulerUtilities.h"
 
-void ColladaWriter::writeFile(const wchar_t* path, Mode& mode)
+void ColladaWriter::writeFile(const std::string& path, Mode& mode)
 {
 	filePath = path;
 
@@ -97,11 +100,10 @@ void ColladaWriter::writeHeader()
 	}
 	
 	time_t rawtime = time(NULL);
-	struct tm timeInfo;
-	gmtime_s(&timeInfo, &rawtime);
-	int timeSize = sizeof("0000-00-00T00:00:00Z");
-	char formattedTime[sizeof("0000-00-00T00:00:00Z")];
-	strftime(formattedTime, timeSize, "%Y-%m-%dT%H:%M:%SZ", &timeInfo);
+	struct tm *timeInfo = gmtime(&rawtime);
+	const int timeSize = sizeof("0000-00-00T00:00:00Z");
+	char formattedTime[timeSize];
+	strftime(formattedTime, timeSize, "%Y-%m-%dT%H:%M:%SZ", timeInfo);
 
 	outFile << R"(<?xml version="1.0" encoding="utf-8"?>)" << endl;
 	outFile << R"(<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">)" << endl;

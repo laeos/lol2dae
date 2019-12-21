@@ -15,7 +15,7 @@ public:
 	float frameDelay;
 	vector<AnmBone> bones;
 
-	void readFile(const wchar_t* path);
+	void readFile(const std::string& path);
 	AnmImporter(map<unsigned int, char*>& boneHashes) : boneHashes(boneHashes){};
 	~AnmImporter();
 

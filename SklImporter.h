@@ -15,7 +15,7 @@ public:
 	vector<int> boneIndices;
 	map<unsigned int, char*> boneHashes;
 
-	void readFile(const wchar_t* path);
+	void readFile(const std::string& path);
 	SklImporter(short& sknVersion) : sknVersion(sknVersion){};
 	~SklImporter();
 };

@@ -1,88 +1,55 @@
-
-// lol2dae.cpp : Defines the class behaviors for the application.
-//
-
 #include "stdafx.h"
-#include "lol2dae.h"
-#include "lol2daeDlg.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#endif
-
-
-// Clol2daeApp
-
-BEGIN_MESSAGE_MAP(Clol2daeApp, CWinApp)
-	ON_COMMAND(ID_HELP, &CWinApp::OnHelp)
-END_MESSAGE_MAP()
+#include "AnmImporter.h"
+#include "SknImporter.h"
+#include "SklImporter.h"
+#include "ColladaWriter.h"
 
 
-// Clol2daeApp construction
-
-Clol2daeApp::Clol2daeApp()
+int main(int argc, char *argv[])
 {
-	// support Restart Manager
-	m_dwRestartManagerSupportFlags = AFX_RESTART_MANAGER_SUPPORT_RESTART;
+    if (argc != 4) {
+	std::cerr << "Usage: " << argv[0] << " <skn> <anm> <output>" << std::endl;
+	exit(1);
+    }
+    std::string sknPath = argv[1];
+    std::string anmPath = argv[2];
+    std::string outputPath = argv[3];
 
-	// TODO: add construction code here,
-	// Place all significant initialization in InitInstance
-}
+    // ColladaWriter::Mode mode = dlg->m_IncludeSkeleton.GetCheck() == 1) ? ColladaWriter::Mode::Skeleton : ColladaWriter::Mode::Mesh;
+    ColladaWriter::Mode mode = ColladaWriter::Mode::Animation;
 
+    try 
+    {
+	SknImporter inputSkn;
+	inputSkn.readFile(sknPath);
 
-// The one and only Clol2daeApp object
+	SklImporter inputSkl(inputSkn.fileVersion);
+	AnmImporter inputAnm(inputSkl.boneHashes);
 
-Clol2daeApp theApp;
-
-
-// Clol2daeApp initialization
-
-BOOL Clol2daeApp::InitInstance()
-{
-	// InitCommonControlsEx() is required on Windows XP if an application
-	// manifest specifies use of ComCtl32.dll version 6 or later to enable
-	// visual styles.  Otherwise, any window creation will fail.
-	INITCOMMONCONTROLSEX InitCtrls;
-	InitCtrls.dwSize = sizeof(InitCtrls);
-	// Set this to include all the common control classes you want to use
-	// in your application.
-	InitCtrls.dwICC = ICC_WIN95_CLASSES;
-	InitCommonControlsEx(&InitCtrls);
-
-	CWinApp::InitInstance();
-
-
-
-	// Standard initialization
-	// If you are not using these features and wish to reduce the size
-	// of your final executable, you should remove from the following
-	// the specific initialization routines you do not need
-	// Change the registry key under which our settings are stored
-	// TODO: You should modify this string to be something appropriate
-	// such as the name of your company or organization
-	SetRegistryKey(_T("Local AppWizard-Generated Applications"));
-
-	Clol2daeDlg dlg;
-	m_pMainWnd = &dlg;
-	INT_PTR nResponse = dlg.DoModal();
-	if (nResponse == IDOK)
+	if (mode >= ColladaWriter::Mode::Skeleton)
 	{
-		// TODO: Place code here to handle when the dialog is
-		//  dismissed with OK
-	}
-	else if (nResponse == IDCANCEL)
-	{
-		// TODO: Place code here to handle when the dialog is
-		//  dismissed with Cancel
-	}
-	else if (nResponse == -1)
-	{
-		TRACE(traceAppMsg, 0, "Warning: dialog creation failed, so application is terminating unexpectedly.\n");
+	    std::string sklPath = sknPath;
+
+	    sklPath.replace(sknPath.length() - 3, 3, "skl");
+
+	    inputSkl.readFile(sklPath);
+
+	    if (mode == ColladaWriter::Mode::Animation)
+	    {
+		inputAnm.readFile(anmPath);
+	    }
 	}
 
+	ColladaWriter outputCollada(inputSkn.indices, inputSkn.vertices, inputSkl.bones, inputSkl.boneIndices, inputAnm);
+	outputCollada.writeFile(outputPath, mode);
+	return 0;
+    }
+    catch (lol2daeError& e)
+    {
+	std::cerr << "error: " << e.what() << std::endl;
+    }
+    return 1;
 
-	// Since the dialog has been closed, return FALSE so that we exit the
-	//  application, rather than start the application's message pump.
-	return FALSE;
 }
 

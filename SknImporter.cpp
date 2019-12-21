@@ -11,7 +11,7 @@ bool SknImporter::checkMagicNumber()
 	return true;
 }
 
-void SknImporter::readFile(const wchar_t* path)
+void SknImporter::readFile(const std::string& path)
 {
 	ifstream inFile(path, ios::in | ios::binary);
 	if (!inFile.is_open())
@@ -36,7 +36,8 @@ void SknImporter::readFile(const wchar_t* path)
 		throw lol2daeError("File version is not supported.");
 	}
 
-	if (!matHeader == 1)
+	// if (!matHeader == 1) // or is it matHeader==0? confused
+	if (matHeader != 1)
 	{
 		throw lol2daeError("The file could not be parsed.");
 	}

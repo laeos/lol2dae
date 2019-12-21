@@ -11,7 +11,7 @@ public:
 	};
 
 private:
-	const wchar_t* filePath;
+	std::string filePath;
 	const vector<short>& indices;
 	const vector<SknVertex>& vertices;
 	vector<SklBone>& bones;
@@ -30,7 +30,7 @@ private:
 	void writeAnimation();
 
 public:
-	void writeFile(const wchar_t* path, Mode& mode);
+	void writeFile(const std::string& path, Mode& mode);
 	ColladaWriter(vector<short>& indices, vector<SknVertex>& vertices, vector<SklBone>& bones, vector<int>& boneIndices, AnmImporter& animation)
 		: indices(indices), vertices(vertices), bones(bones), boneIndices(boneIndices), animation(animation){};
 	~ColladaWriter();

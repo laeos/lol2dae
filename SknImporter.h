@@ -17,7 +17,7 @@ public:
 	vector<SknVertex> vertices;
 	short fileVersion;
 
-	void readFile(const wchar_t* path);
+	void readFile(const std::string& path);
 	SknImporter();
 	~SknImporter();
 

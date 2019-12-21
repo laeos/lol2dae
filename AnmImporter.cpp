@@ -1,7 +1,8 @@
 #include "stdafx.h"
+
 #include "AnmImporter.h"
 
-void AnmImporter::readFile(const wchar_t* path)
+void AnmImporter::readFile(const std::string& path)
 {
 	ifstream inFile(path, ios::in | ios::binary);
 	if (!inFile.is_open())
@@ -75,7 +76,7 @@ void AnmImporter::readFile(const wchar_t* path)
 		indicesOffset += 12;
 		hashesOffset += 12;
 
-		const int hashBlock = 4;
+		// const int hashBlock = 4;
 		vector<unsigned int> hashEntries;
 
 		inFile.seekg(hashesOffset, ios_base::beg);
@@ -112,7 +113,7 @@ void AnmImporter::readFile(const wchar_t* path)
 			bitset<48> compressedData;
 			inFile.read(reinterpret_cast<char*>(&compressedData), 6);
 
-			int boneHash = hashEntries.at(hashIndex);
+			// int boneHash = hashEntries.at(hashIndex);
 
 			if (dataType == quaternionType)
 			{
@@ -140,7 +141,7 @@ void AnmImporter::readFile(const wchar_t* path)
 			}
 
 			AnmBone boneEntry;
-			strcpy_s(boneEntry.name, boneHashes.at(boneHash));
+			strcpy(boneEntry.name, boneHashes.at(boneHash));
 
 			unordered_set<short> translationsTimeSet;
 
@@ -238,12 +239,12 @@ void AnmImporter::readFile(const wchar_t* path)
 
 			if (boneHashes.find(boneHash) != boneHashes.end())
 			{
-				strcpy_s(bones.at(i).name, boneHashes.at(boneHash));
+				strcpy(bones.at(i).name, boneHashes.at(boneHash));
 			}
 
 			else
 			{
-				strcpy_s(bones.at(i).name, name);
+				strcpy(bones.at(i).name, name);
 			}
 
 			inFile.seekg(4, ios_base::cur);
@@ -355,7 +356,7 @@ void AnmImporter::readFile(const wchar_t* path)
 			}
 
 			AnmBone boneEntry;
-			strcpy_s(boneEntry.name, boneHashes.at(i.first));
+			strcpy(boneEntry.name, boneHashes.at(i.first));
 
 			for (auto& f : i.second)
 			{			
@@ -448,7 +449,7 @@ void AnmImporter::readFile(const wchar_t* path)
 			{
 				if (boneHashes.find(hashEntries.at(j)) != boneHashes.end())
 				{
-					strcpy_s(bones.at(j).name, boneHashes.at(hashEntries.at(j)));
+					strcpy(bones.at(j).name, boneHashes.at(hashEntries.at(j)));
 				}
 
 				short translationIndex, quaternionIndex, scaleIndex;
